@@ -221,22 +221,39 @@ namespace OpenZWave
 			}
 
 //-----------------------------------------------------------------------------
-// <ValueList::SetByValue>
+// <ValueList::SetByIdx>
 // Set a new value in the device, selected by item index
 //-----------------------------------------------------------------------------
-			bool ValueList::SetByValue(int32 const _value)
+			bool ValueList::SetByIdx(int32 const& _idx)
 			{
 				// create a temporary copy of this value to be submitted to the Set() call and set its value to the function param
 				ValueList* tempValue = new ValueList(*this);
-				tempValue->m_valueIdx = _value;
+				tempValue->m_valueIdx = _idx;
 
 				// Set the value in the device.
-				bool ret = ((Value*) tempValue)->Set();
+				bool ret = ((Value*)tempValue)->Set();
 
 				// clean up the temporary value
 				delete tempValue;
 
 				return ret;
+			}
+
+//-----------------------------------------------------------------------------
+// <ValueList::SetByValue>
+// Set a new value in the device
+//-----------------------------------------------------------------------------
+			bool ValueList::SetByValue(int32 const _value)
+			{
+				// Ensure the value is one of the options
+				int index = GetItemIdxByValue(_value);
+				if (index < 0)
+				{
+					// Item not found
+					return false;
+				}
+
+				return SetByIdx(index);
 			}
 
 //-----------------------------------------------------------------------------

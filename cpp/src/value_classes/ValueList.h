@@ -62,6 +62,7 @@ namespace OpenZWave
 					{
 					}
 
+					bool SetByIdx(int32 const& _idx);
 					bool SetByLabel(string const& _label);
 					bool SetByValue(int32 const _value);
 
